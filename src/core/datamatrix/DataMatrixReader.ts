@@ -89,6 +89,19 @@ export default class DataMatrixReader implements Reader {
   }
 
   // @Override
+  public decodeBits(image: BinaryBitmap, hints: Map<DecodeHintType, any> | null = null): BitMatrix {
+    let bits: BitMatrix;
+    if (hints != null && hints.has(DecodeHintType.PURE_BARCODE)) {
+      bits = DataMatrixReader.extractPureBits(image.getBlackMatrix());
+    } else {
+      const detectorResult = new Detector(image.getBlackMatrix()).detect();
+      bits = detectorResult.getBits();
+    }
+
+    return bits
+  }
+
+  // @Override
   public reset(): void {
     // do nothing
   }
